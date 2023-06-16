@@ -1,0 +1,11 @@
+[run]
+source = .
+command_line = run_test.py
+omit =
+    ./venv/*,
+    *tests*,
+
+[report]
+omit =
+    ./venv/*,
+    *tests*,
