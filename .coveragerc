@@ -2,10 +2,14 @@
 source = .
 command_line = run_test.py
 omit =
+    *__init__*,
     ./venv/*,
-    *tests*,
+    tests/*,
+    ./*.py,
 
 [report]
 omit =
+    *__init__*,
     ./venv/*,
-    *tests*,
+    tests/*,
+    ./*.py,
