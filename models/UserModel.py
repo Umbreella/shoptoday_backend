@@ -37,13 +37,8 @@ class UserModel(BASE):
         return user
 
     @classmethod
-    async def get_all_query(cls, user_id: int | None = None):
+    async def get_all_query(cls):
         query = select(cls)
-
-        if user_id:
-            query = query.where(
-                cls.id == user_id
-            )
 
         return query.order_by(cls.id)
 

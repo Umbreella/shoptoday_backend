@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 from fastapi_jwt_auth import AuthJWT
+from fastapi_jwt_auth.exceptions import JWTDecodeError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from exceptions.NotFound import NotFound
@@ -18,6 +19,12 @@ async def activate_user_by_token(
         db: AsyncSession = Depends(get_db)
 ) -> JSONResponse:
     decoded_token = auth.get_raw_jwt(token)
+
+    if decoded_token.get('type') != 'activate':
+        raise JWTDecodeError(**{
+            'status_code': status.HTTP_403_FORBIDDEN,
+            'message': 'Not valid token type.',
+        })
 
     user_id = decoded_token.get('sub')
     data = UserSchemaStatus(**{

@@ -14,12 +14,11 @@ router = APIRouter()
 
 @router.get('/')
 async def list_users(
-        user: int | None = None,
         auth: AuthJWT = Depends(),
         db: AsyncSession = Depends(get_db),
 ) -> Page[UserSchemaOut]:
     await is_admin(auth, db)
 
-    query = await UserModel.get_all_query(user_id=user)
+    query = await UserModel.get_all_query()
 
     return await paginate(db, query)

@@ -1,4 +1,8 @@
 [run]
+concurrency =
+    greenlet
+    thread
+
 source = .
 command_line = run_test.py
 omit =
@@ -6,6 +10,7 @@ omit =
     ./venv/*,
     tests/*,
     ./*.py,
+
 
 [report]
 omit =

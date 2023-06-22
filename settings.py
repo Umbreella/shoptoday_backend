@@ -5,8 +5,11 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    DATABASE_URL_ASYNC: str
-    DATABASE_URL_SYNC: str
+    DATABASE_URL_HOST: str
+    DATABASE_URL_PORT: str
+    DATABASE_URL_USER: str
+    DATABASE_URL_PASSWORD: str
+    DATABASE_URL_DB: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     REFRESH_TOKEN_EXPIRE_MINUTES: int
     ALGORITHM: str
