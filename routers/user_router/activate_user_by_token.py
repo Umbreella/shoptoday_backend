@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Request, status
 from fastapi.responses import JSONResponse
 from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import JWTDecodeError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from exceptions.NotFound import NotFound
 from models.UserModel import UserModel
+from permissions.AllowAny import AllowAny
 from schemas.UserSchema import UserSchemaStatus
 from services.async_database import get_db
 
@@ -13,12 +13,13 @@ router = APIRouter()
 
 
 @router.get('/activate/{token}/')
+@AllowAny
 async def activate_user_by_token(
+        request: Request,
         token: str,
-        auth: AuthJWT = Depends(),
         db: AsyncSession = Depends(get_db)
 ) -> JSONResponse:
-    decoded_token = auth.get_raw_jwt(token)
+    decoded_token = AuthJWT().get_raw_jwt(token)
 
     if decoded_token.get('type') != 'activate':
         raise JWTDecodeError(**{
@@ -31,10 +32,7 @@ async def activate_user_by_token(
         'is_active': True,
     })
 
-    user = await UserModel.update_by_id(user_id, data, db)
-
-    if not user:
-        raise NotFound()
+    await UserModel.update_by_id(user_id, data, db)
 
     return JSONResponse(**{
         'status_code': status.HTTP_200_OK,

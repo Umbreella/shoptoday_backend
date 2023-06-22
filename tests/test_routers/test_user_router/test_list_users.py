@@ -9,9 +9,11 @@ from services.async_database import async_database
 from services.security import security
 
 url = '/api/users/'
+token_admin = AuthJWT().create_access_token(subject='admin')
+token_user = AuthJWT().create_access_token(subject='user')
 
 
-async def create_users() -> List[str]:
+async def filling_database() -> List[str]:
     async with async_database.session() as db, db.begin():
         insert_rows = await db.execute(
             insert(
@@ -38,7 +40,7 @@ async def create_users() -> List[str]:
 
 
 async def test_When_PostForListUsers_Should_ErrorWith405(client):
-    response = await client.post(url, data={})
+    response = await client.post(url, json={})
 
     expected_status = status.HTTP_405_METHOD_NOT_ALLOWED
     real_status = response.status_code
@@ -47,7 +49,7 @@ async def test_When_PostForListUsers_Should_ErrorWith405(client):
 
 
 async def test_When_PutForListUsers_Should_ErrorWith405(client):
-    response = await client.put(url, data={})
+    response = await client.put(url, json={})
 
     expected_status = status.HTTP_405_METHOD_NOT_ALLOWED
     real_status = response.status_code
@@ -56,7 +58,7 @@ async def test_When_PutForListUsers_Should_ErrorWith405(client):
 
 
 async def test_When_PatchForListUsers_Should_ErrorWith405(client):
-    response = await client.patch(url, data={})
+    response = await client.patch(url, json={})
 
     expected_status = status.HTTP_405_METHOD_NOT_ALLOWED
     real_status = response.status_code
@@ -85,13 +87,12 @@ async def test_When_GetForListUsersWithOutAuthUser_Should_ErrorWith403(
 
 async def test_When_GetForListUsersWithRandomAuth_Should_ErrorWith403(
         client):
-    await create_users()
-    token = AuthJWT().create_access_token(subject='user')
+    await filling_database()
 
     response = await client.get(**{
         'url': url,
         'headers': {
-            'Authorization': f'Bearer {token}',
+            'Authorization': f'Bearer {token_user}',
         },
     })
 
@@ -103,13 +104,12 @@ async def test_When_GetForListUsersWithRandomAuth_Should_ErrorWith403(
 
 async def test_When_GetForListUsersWithAdminUser_Should_DataWith200(
         client):
-    passwords = await create_users()
-    token = AuthJWT().create_access_token(subject='admin')
+    passwords = await filling_database()
 
     response = await client.get(**{
         'url': url,
         'headers': {
-            'Authorization': f'Bearer {token}',
+            'Authorization': f'Bearer {token_admin}',
         },
     })
 

@@ -18,7 +18,7 @@ token_admin = AuthJWT().create_access_token(subject='admin')
 token_user = AuthJWT().create_access_token(subject='user')
 
 
-async def create_users() -> None:
+async def filling_database() -> None:
     async with async_database.session() as db, db.begin():
         await db.execute(
             insert(
@@ -100,7 +100,7 @@ async def test_When_PatchForSingleUserWithOutAuthUser_Should_ErrorWith403(
 
 async def test_When_PatchForSingleUserWithRandomAuth_Should_ErrorWith403(
         client):
-    await create_users()
+    await filling_database()
 
     response = await client.patch(**{
         'url': url,
@@ -118,7 +118,7 @@ async def test_When_PatchForSingleUserWithRandomAuth_Should_ErrorWith403(
 
 async def test_When_PatchForNotFoundUserWithAdminAuth_Should_NotFound(
         client):
-    await create_users()
+    await filling_database()
 
     response = await client.patch(**{
         'url': url_not_found,
@@ -142,7 +142,7 @@ async def test_When_PatchForNotFoundUserWithAdminAuth_Should_NotFound(
 
 async def test_When_PatchForSingleUserWithAdminAuth_Should_ChangeIsActive(
         client):
-    await create_users()
+    await filling_database()
 
     response_activate = await client.patch(**{
         'url': url,

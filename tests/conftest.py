@@ -23,7 +23,7 @@ async def client(app):
         yield c
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope='session')
 def event_loop(request):
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
@@ -39,7 +39,7 @@ postgresql_in_docker = factories.postgresql_noproc(**{
 })
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope='session', autouse=True)
 async def connection_test(postgresql_in_docker, event_loop):
     pg_host = postgresql_in_docker.host
     pg_port = postgresql_in_docker.port
@@ -65,14 +65,14 @@ async def connection_test(postgresql_in_docker, event_loop):
         await async_database.close()
 
 
-@pytest.fixture(scope="function", autouse=True)
+@pytest.fixture(scope='function', autouse=True)
 async def create_tables(connection_test):
     async with async_database.connect() as connection:
         await async_database.drop_all(connection)
         await async_database.create_all(connection)
 
 
-@pytest.fixture(scope="function", autouse=True)
+@pytest.fixture(scope='function', autouse=True)
 async def session_override(app, connection_test):
     async def get_db_override():
         async with async_database.session() as session, session.begin():

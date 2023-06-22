@@ -16,14 +16,9 @@ activate_token = AuthJWT()._create_token(**{
     'exp_time': datetime.utcnow() + timedelta(days=1),
     'type_token': 'activate',
 })
-activate_token_not_found = AuthJWT()._create_token(**{
-    'subject': 10000,
-    'exp_time': datetime.utcnow() + timedelta(days=1),
-    'type_token': 'activate',
-})
 
 
-async def create_users() -> None:
+async def filling_database() -> None:
     async with async_database.session() as db, db.begin():
         await db.execute(
             insert(
@@ -124,21 +119,9 @@ async def test_When_GetForActivateUserWithRefreshToken_Should_ErrorWith403(
     assert expected_data == real_data
 
 
-async def test_When_GetForActivateUserWithNotFoundActivate_Should_NotFound(
-        client):
-    await create_users()
-
-    response = await client.get(f'{url}{activate_token_not_found}/')
-
-    expected_status = status.HTTP_404_NOT_FOUND
-    real_status = response.status_code
-
-    assert expected_status == real_status
-
-
 async def test_When_GetForActivateUserWithActivateToken_Should_DataWith200(
         client):
-    await create_users()
+    await filling_database()
 
     response = await client.get(f'{url}{activate_token}/')
 

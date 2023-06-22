@@ -14,8 +14,8 @@ def IsAuthenticated(func):
         request = kwargs.get('request')
         db = kwargs.get('db')
 
-        assert isinstance(request, Request), 'Missing kwargs \'request\'.'
-        assert isinstance(db, AsyncSession), 'Missing kwargs \'db\'.'
+        assert isinstance(request, Request), 'Missing kwargs "request".'
+        assert isinstance(db, AsyncSession), 'Missing kwargs "db".'
 
         user = await get_user_by_token(request, db)
 
