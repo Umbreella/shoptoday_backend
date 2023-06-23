@@ -11,7 +11,7 @@ class BillingAccountModel(BASE):
     __tablename__ = 'billing_accounts'
 
     __table_args__ = (
-        CheckConstraint('balance > 0', 'only_positive_balance'),
+        CheckConstraint('balance >= 0', 'only_positive_balance'),
     )
 
     id = Column(Integer, primary_key=True)
@@ -79,6 +79,6 @@ class BillingAccountModel(BASE):
         try:
             await db.execute(update_query)
         except IntegrityError:
-            return 'Insufficient funds.'
+            return 'Insufficient funds'
 
         return 'Success'

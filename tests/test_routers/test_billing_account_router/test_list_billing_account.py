@@ -43,7 +43,8 @@ async def test_When_DeleteForListBillingAccounts_Should_ErrorWith405(client):
 
 
 async def test_When_GetForListBillingAccountsWithOutAuth_Should_ErrorWith403(
-        client):
+        client,
+):
     response = await client.get(url)
 
     expected_status = status.HTTP_403_FORBIDDEN

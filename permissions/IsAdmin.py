@@ -19,9 +19,6 @@ def IsAdmin(func):
 
         user = await get_user_by_token(request, db)
 
-        if not user:
-            raise PermissionDenied()
-
         if not user.is_superuser:
             raise PermissionDenied()
 

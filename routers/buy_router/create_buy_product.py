@@ -1,11 +1,10 @@
-from fastapi import APIRouter, Depends
-from fastapi_jwt_auth import AuthJWT
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from exceptions.BadRequest import BadRequest
 from models.BillingAccountModel import BillingAccountModel
 from models.ProductModel import ProductModel
-from permissions.get_user_by_token import get_user_by_token
+from permissions.IsAuthenticated import IsAuthenticated
 from schemas.BuySchema import BuyProductSchema
 from services.async_database import get_db
 
@@ -13,12 +12,13 @@ router = APIRouter()
 
 
 @router.post('/')
+@IsAuthenticated
 async def create_buy_product(
+        request: Request,
         data: BuyProductSchema,
-        auth: AuthJWT = Depends(),
         db: AsyncSession = Depends(get_db),
 ):
-    auth_user = await get_user_by_token(auth, db)
+    auth_user = request.jwt_user
 
     product = await ProductModel.get_by_id(data.product, db)
 

@@ -3,8 +3,6 @@ from functools import wraps
 from fastapi import Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from exceptions.PermissionDenied import PermissionDenied
-
 from .get_user_by_token import get_user_by_token
 
 
@@ -18,9 +16,6 @@ def IsAuthenticated(func):
         assert isinstance(db, AsyncSession), 'Missing kwargs "db".'
 
         user = await get_user_by_token(request, db)
-
-        if not user:
-            raise PermissionDenied()
 
         request.jwt_user = user
         kwargs.update({

@@ -24,6 +24,12 @@ async def filling_products() -> None:
                     'description': 'product',
                     'price': 1_000,
                 },
+                {
+                    'id': 2,
+                    'title': 'product',
+                    'description': 'product',
+                    'price': 100,
+                },
             ])
         )
 
