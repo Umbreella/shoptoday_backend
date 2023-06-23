@@ -1,4 +1,6 @@
 import asyncio
+import platform
+from asyncio import WindowsSelectorEventLoopPolicy
 from logging.config import fileConfig
 
 from sqlalchemy import Connection, pool
@@ -6,6 +8,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 from models.BillingAccountModel import BillingAccountModel
+from models.BlackListToken import BlackListToken
 from models.ProductModel import ProductModel
 from models.TransactionModel import TransactionModel
 from models.UserModel import UserModel
@@ -13,7 +16,19 @@ from services.async_database import BASE
 from settings import settings
 
 config = context.config
-config.set_main_option('sqlalchemy.url', settings.DATABASE_URL_ASYNC)
+
+if platform.system() == 'Windows':
+    asyncio.set_event_loop_policy(WindowsSelectorEventLoopPolicy())
+
+connection_str = ''.join((
+    'postgresql+psycopg://',
+    f'{settings.DATABASE_URL_USER}:'
+    f'{settings.DATABASE_URL_PASSWORD}@'
+    f'{settings.DATABASE_URL_HOST}:'
+    f'{settings.DATABASE_URL_PORT}/'
+    f'{settings.DATABASE_URL_DB}',
+))
+config.set_main_option('sqlalchemy.url', connection_str)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
