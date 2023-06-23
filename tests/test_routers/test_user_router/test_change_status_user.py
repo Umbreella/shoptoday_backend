@@ -1,10 +1,5 @@
 from fastapi import status
 from fastapi_jwt_auth import AuthJWT
-from sqlalchemy import insert
-
-from models.UserModel import UserModel
-from services.async_database import async_database
-from services.security import security
 
 url = '/api/users/2/'
 url_not_found = '/api/users/10/'
@@ -16,30 +11,6 @@ json_data_deactivate = {
 }
 token_admin = AuthJWT().create_access_token(subject='admin')
 token_user = AuthJWT().create_access_token(subject='user')
-
-
-async def filling_database() -> None:
-    async with async_database.session() as db, db.begin():
-        await db.execute(
-            insert(
-                UserModel
-            ).values([
-                {
-                    'id': 1,
-                    'username': 'admin',
-                    'password': security.get_password_hash('w' * 10),
-                    'is_superuser': True,
-                    'is_active': False,
-                },
-                {
-                    'id': 2,
-                    'username': 'user',
-                    'password': security.get_password_hash('q' * 10),
-                    'is_superuser': False,
-                    'is_active': False,
-                },
-            ]).returning(UserModel.password)
-        )
 
 
 async def test_When_GetForSingleUser_Should_ErrorWith405(client):
@@ -99,9 +70,8 @@ async def test_When_PatchForSingleUserWithOutAuthUser_Should_ErrorWith403(
 
 
 async def test_When_PatchForSingleUserWithRandomAuth_Should_ErrorWith403(
-        client):
-    await filling_database()
-
+        client, filling_users,
+):
     response = await client.patch(**{
         'url': url,
         'json': json_data_activate,
@@ -117,9 +87,8 @@ async def test_When_PatchForSingleUserWithRandomAuth_Should_ErrorWith403(
 
 
 async def test_When_PatchForNotFoundUserWithAdminAuth_Should_NotFound(
-        client):
-    await filling_database()
-
+        client, filling_users,
+):
     response = await client.patch(**{
         'url': url_not_found,
         'json': json_data_activate,
@@ -141,9 +110,8 @@ async def test_When_PatchForNotFoundUserWithAdminAuth_Should_NotFound(
 
 
 async def test_When_PatchForSingleUserWithAdminAuth_Should_ChangeIsActive(
-        client):
-    await filling_database()
-
+        client, filling_users,
+):
     response_activate = await client.patch(**{
         'url': url,
         'json': json_data_activate,

@@ -18,7 +18,7 @@ async def change_status_user(
         data: UserSchemaStatus,
         db: AsyncSession = Depends(get_db),
 ) -> UserSchemaOut:
-    user = await UserModel.update_by_id(user_id, data, db)
+    user = await UserModel.update_status_by_id(user_id, data, db)
 
     if not user:
         raise NotFound()

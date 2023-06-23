@@ -31,11 +31,9 @@ class ProductModel(BASE):
 
     @classmethod
     async def create(cls, data: ProductSchemaIn, db: AsyncSession):
-        query = insert(cls).values({
-            'title': data.title,
-            'description': data.description,
-            'price': data.price,
-        }).on_conflict_do_nothing().returning(cls)
+        query = insert(cls).values(
+            data.dict()
+        ).returning(cls)
 
         rows = await db.execute(query)
 

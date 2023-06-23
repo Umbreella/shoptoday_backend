@@ -32,7 +32,7 @@ async def activate_user_by_token(
         'is_active': True,
     })
 
-    await UserModel.update_by_id(user_id, data, db)
+    await UserModel.update_status_by_id(user_id, data, db)
 
     return JSONResponse(**{
         'status_code': status.HTTP_200_OK,

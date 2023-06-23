@@ -2,37 +2,19 @@ from datetime import datetime, timedelta
 
 from fastapi import status
 from fastapi_jwt_auth import AuthJWT
-from sqlalchemy import insert, select
+from sqlalchemy import select
 
 from models.UserModel import UserModel
 from services.async_database import async_database
-from services.security import security
 
 url = '/api/users/activate/'
 access_token = AuthJWT().create_access_token(subject='user')
 refresh_token = AuthJWT().create_refresh_token(subject='user')
 activate_token = AuthJWT()._create_token(**{
-    'subject': 1,
+    'subject': 2,
     'exp_time': datetime.utcnow() + timedelta(days=1),
     'type_token': 'activate',
 })
-
-
-async def filling_database() -> None:
-    async with async_database.session() as db, db.begin():
-        await db.execute(
-            insert(
-                UserModel
-            ).values([
-                {
-                    'id': 1,
-                    'username': 'user',
-                    'password': security.get_password_hash('q' * 10),
-                    'is_superuser': False,
-                    'is_active': False,
-                },
-            ]).returning(UserModel.password)
-        )
 
 
 async def test_When_PostForActivateUser_Should_ErrorWith405(client):
@@ -120,9 +102,8 @@ async def test_When_GetForActivateUserWithRefreshToken_Should_ErrorWith403(
 
 
 async def test_When_GetForActivateUserWithActivateToken_Should_DataWith200(
-        client):
-    await filling_database()
-
+        client, filling_users,
+):
     response = await client.get(f'{url}{activate_token}/')
 
     expected_status = status.HTTP_200_OK
@@ -137,6 +118,8 @@ async def test_When_GetForActivateUserWithActivateToken_Should_DataWith200(
         select_rows = await db.execute(
             select(
                 UserModel.is_active
+            ).where(
+                UserModel.id == 2
             )
         )
         select_result = select_rows.scalars().first()

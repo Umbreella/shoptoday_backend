@@ -54,8 +54,8 @@ class UserModel(BASE):
         return rows.scalars().first()
 
     @classmethod
-    async def update_by_id(cls, user_id: int, data: UserSchemaStatus,
-                           db: AsyncSession):
+    async def update_status_by_id(cls, user_id: int, data: UserSchemaStatus,
+                                  db: AsyncSession):
         query = update(cls).where(
             cls.id == user_id
         ).values(

@@ -10,6 +10,14 @@ from app.app import get_asgi_application
 from services.async_database import async_database, get_db
 from settings import settings
 
+from .filling_database import (filling_billing_accounts, filling_products,
+                               filling_users, filling_users_with_passwords)
+
+filling_users = filling_users
+filling_products = filling_products
+filling_users_with_passwords = filling_users_with_passwords
+filling_billing_accounts = filling_billing_accounts
+
 
 @pytest.fixture(autouse=True)
 def app():
