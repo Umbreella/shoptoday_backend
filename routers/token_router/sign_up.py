@@ -6,6 +6,7 @@ from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models.UserModel import UserModel
+from permissions.AllowAny import AllowAny
 from schemas.UserSchema import UserSchemaIn
 from services.async_database import get_db
 
@@ -13,6 +14,7 @@ router = APIRouter()
 
 
 @router.post('/sign_up/')
+@AllowAny
 async def sign_up(
         request: Request,
         data: UserSchemaIn,
@@ -34,7 +36,7 @@ async def sign_up(
     })
 
     activate_url = request.url_for('activate_user_by_token',
-                                   token=activate_token, )
+                                   token=activate_token)
 
     return JSONResponse(**{
         'status_code': status.HTTP_201_CREATED,
