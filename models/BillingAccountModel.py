@@ -1,5 +1,5 @@
 from sqlalchemy import (DECIMAL, CheckConstraint, Column, ForeignKey, Integer,
-                        select, update)
+                        and_, select, update)
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -22,9 +22,10 @@ class BillingAccountModel(BASE):
     @classmethod
     async def check_owner(cls, user_id: int, billing_account_id: int,
                           db: AsyncSession) -> bool:
-        query = select(cls).where(
-            cls.id == billing_account_id and cls.user_id == user_id
-        )
+        query = select(cls).where(and_(
+            cls.id == billing_account_id,
+            cls.user_id == user_id,
+        ))
 
         rows = await db.execute(query)
         result = rows.scalars().first()
@@ -45,10 +46,10 @@ class BillingAccountModel(BASE):
     @classmethod
     async def get_or_create(cls, user_id: int, billing_account_id: int,
                             db: AsyncSession):
-        select_query = select(cls).where(
-            cls.id == billing_account_id and
-            cls.user_id == user_id
-        )
+        select_query = select(cls).where(and_(
+            cls.id == billing_account_id,
+            cls.user_id == user_id,
+        ))
 
         select_rows = await db.execute(select_query)
         select_result = select_rows.scalars().first()

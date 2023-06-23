@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models.BillingAccountModel import BillingAccountModel
-from schemas.TransactionSchema import TransactionSchemaIn
+from schemas.TransactionSchema import TransactionSchemaWebhook
 from services.async_database import get_db
 from settings import settings
 
@@ -12,7 +12,7 @@ router = APIRouter()
 
 @router.post('/payment/webhook/')
 async def payment_webhook(
-        data: TransactionSchemaIn,
+        data: TransactionSchemaWebhook,
         response: Response,
         db: AsyncSession = Depends(get_db)
 ) -> None:
