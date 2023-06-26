@@ -12,7 +12,6 @@ omit =
     app/*,
     ./*.py,
 
-
 [report]
 omit =
     *__init__*,
