@@ -45,7 +45,7 @@ class ProductModel(BASE):
         query = update(cls).where(
             cls.id == product_id
         ).values(
-            **data.dict()
+            data.dict()
         ).returning(cls)
 
         rows = await db.execute(query)
@@ -56,7 +56,7 @@ class ProductModel(BASE):
     async def delete(cls, product_id: int, db: AsyncSession):
         query = delete(cls).where(
             cls.id == product_id
-        ).returning(cls.id)
+        ).returning(cls)
 
         rows = await db.execute(query)
 
