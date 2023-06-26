@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from sqlalchemy import (DECIMAL, CheckConstraint, Column, ForeignKey, Integer,
                         and_, select, update)
 from sqlalchemy.dialects.postgresql import insert
@@ -28,9 +30,8 @@ class BillingAccountModel(BASE):
         ))
 
         rows = await db.execute(query)
-        result = rows.scalars().first()
 
-        return bool(result)
+        return bool(rows.scalars().first())
 
     @classmethod
     async def get_all_query(cls, user_id: int | None = None):
@@ -73,7 +74,7 @@ class BillingAccountModel(BASE):
         update_query = update(cls).where(
             cls.id == billing_account_id
         ).values({
-            'balance': cls.balance + change_balance,
+            'balance': cls.balance + Decimal(change_balance),
         }).returning(cls.id)
 
         try:

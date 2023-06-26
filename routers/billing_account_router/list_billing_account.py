@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession as ASession
 
 from models.BillingAccountModel import BillingAccountModel
 from permissions.IsAuthenticated import IsAuthenticated
-from schemas.BankAccountSchema import BankAccountSchema
+from schemas.BillingAccountSchema import BillingAccountSchema
 from services.async_database import get_db
 
 router = APIRouter()
@@ -17,7 +17,7 @@ async def list_billing_accounts(
         request: Request,
         user: int | None = None,
         db: ASession = Depends(get_db),
-) -> Page[BankAccountSchema]:
+) -> Page[BillingAccountSchema]:
     auth_user = request.jwt_user
 
     user_id = user if auth_user.is_superuser else auth_user.id

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class BankAccountSchema(BaseModel):
+class BillingAccountSchema(BaseModel):
     id: int
     balance: float
     user_id: int
