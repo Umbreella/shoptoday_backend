@@ -10,11 +10,11 @@ class Settings(BaseSettings):
     DATABASE_URL_USER: str
     DATABASE_URL_PASSWORD: str
     DATABASE_URL_DB: str
-    ACCESS_TOKEN_EXPIRE_MINUTES: int
-    REFRESH_TOKEN_EXPIRE_MINUTES: int
-    ALGORITHM: str
     PAYMENT_SECRET_KEY: str
+    authjwt_algorithm: str
     authjwt_secret_key: str
+    authjwt_access_token_expires: int
+    authjwt_refresh_token_expires: int
 
     class Config:
         env_file = os.getenv('ENV_FILE')

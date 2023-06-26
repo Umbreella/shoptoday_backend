@@ -4,11 +4,12 @@ concurrency =
     thread
 
 source = .
-command_line = run_test.py
+command_line = test.py
 omit =
     *__init__*,
     ./venv/*,
     tests/*,
+    app/*,
     ./*.py,
 
 
@@ -17,4 +18,5 @@ omit =
     *__init__*,
     ./venv/*,
     tests/*,
+    app/*,
     ./*.py,

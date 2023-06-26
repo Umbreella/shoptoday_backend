@@ -7,8 +7,8 @@ from pytest_postgresql import factories
 from pytest_postgresql.janitor import DatabaseJanitor
 
 from app.app import get_asgi_application
+from app.settings import settings
 from services.async_database import async_database, get_db
-from settings import settings
 
 from .filling_database import (filling_billing_accounts, filling_products,
                                filling_transactions, filling_users,

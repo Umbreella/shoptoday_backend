@@ -3,8 +3,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi_pagination import add_pagination
 
+from app.settings import settings
 from services.async_database import async_database
-from settings import settings
 
 from .exception_handlers import add_exception_handlers
 from .routers import add_routers
@@ -36,6 +36,7 @@ def get_asgi_application(skip_init_db=False):
     app = FastAPI(**{
         'debug': True,
         'lifespan': lifespan,
+        'docs_url': '/api/docs/',
     })
 
     add_routers(app)

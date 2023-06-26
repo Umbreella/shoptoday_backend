@@ -46,7 +46,7 @@ async def filling_users() -> None:
                     'username': 'admin',
                     'password': 'admin',
                     'is_superuser': True,
-                    'is_active': False,
+                    'is_active': True,
                 },
                 {
                     'id': 2,
@@ -71,7 +71,7 @@ async def filling_users_with_passwords() -> List[str]:
                     'username': 'admin',
                     'password': security.get_password_hash('admin'),
                     'is_superuser': True,
-                    'is_active': False,
+                    'is_active': True,
                 },
                 {
                     'id': 2,
