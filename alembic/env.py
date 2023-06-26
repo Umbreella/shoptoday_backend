@@ -7,13 +7,8 @@ from sqlalchemy import Connection, pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
-from models.BillingAccountModel import BillingAccountModel
-from models.BlackListToken import BlackListToken
-from models.ProductModel import ProductModel
-from models.TransactionModel import TransactionModel
-from models.UserModel import UserModel
+from app.settings import settings
 from services.async_database import BASE
-from settings import settings
 
 config = context.config
 

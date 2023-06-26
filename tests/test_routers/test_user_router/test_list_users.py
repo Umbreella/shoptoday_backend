@@ -85,7 +85,7 @@ async def test_When_GetForListUsersWithAdminUser_Should_DataWith200(
         'items': [
             {
                 'id': 1,
-                'is_active': False,
+                'is_active': True,
                 'is_superuser': True,
                 'username': 'admin',
                 'password': filling_users_with_passwords[0],

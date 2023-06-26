@@ -38,9 +38,7 @@ class UserModel(BASE):
 
     @classmethod
     async def get_all_query(cls):
-        query = select(cls)
-
-        return query.order_by(cls.id)
+        return select(cls).order_by(cls.id)
 
     @classmethod
     async def create(cls, data: UserSchemaIn, db: AsyncSession) -> str:
@@ -59,7 +57,7 @@ class UserModel(BASE):
         query = update(cls).where(
             cls.id == user_id
         ).values(
-            **data.dict()
+            data.dict()
         ).returning(cls)
 
         rows = await db.execute(query)
@@ -70,6 +68,16 @@ class UserModel(BASE):
     async def get_by_username(cls, username: str, db: AsyncSession):
         query = select(cls).where(
             cls.username == username
+        )
+
+        rows = await db.execute(query)
+
+        return rows.scalars().first()
+
+    @classmethod
+    async def get_by_id(cls, user_id: int, db: AsyncSession):
+        query = select(cls).where(
+            cls.id == user_id
         )
 
         rows = await db.execute(query)
