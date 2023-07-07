@@ -34,7 +34,6 @@ def get_asgi_application(skip_init_db=False):
                 await async_database.close()
 
     app = FastAPI(**{
-        'debug': True,
         'lifespan': lifespan,
         'docs_url': '/api/docs/',
     })
