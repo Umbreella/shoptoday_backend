@@ -5,6 +5,7 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
+    FASTAPI_APP_ALLOW_ORIGINS: str
     DATABASE_URL_HOST: str
     DATABASE_URL_PORT: str
     DATABASE_URL_USER: str

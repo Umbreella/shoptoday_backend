@@ -12,4 +12,6 @@ RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
 COPY . /usr/src/app/
 
-CMD ["python3", "main.py"]
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

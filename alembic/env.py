@@ -1,6 +1,4 @@
 import asyncio
-import platform
-from asyncio import WindowsSelectorEventLoopPolicy
 from logging.config import fileConfig
 
 from sqlalchemy import Connection, pool
@@ -11,9 +9,6 @@ from app.settings import settings
 from services.async_database import BASE
 
 config = context.config
-
-if platform.system() == 'Windows':
-    asyncio.set_event_loop_policy(WindowsSelectorEventLoopPolicy())
 
 connection_str = ''.join((
     'postgresql+psycopg://',
