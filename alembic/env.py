@@ -11,7 +11,7 @@ from services.async_database import BASE
 config = context.config
 
 connection_str = ''.join((
-    'postgresql+psycopg://',
+    'postgresql+asyncpg://',
     f'{settings.DATABASE_URL_USER}:'
     f'{settings.DATABASE_URL_PASSWORD}@'
     f'{settings.DATABASE_URL_HOST}:'

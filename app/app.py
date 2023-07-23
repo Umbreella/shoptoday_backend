@@ -21,7 +21,7 @@ def get_asgi_application(skip_init_db=False):
         pg_db = settings.DATABASE_URL_DB
 
         connection_str = ''.join((
-            'postgresql+psycopg://',
+            'postgresql+asyncpg://',
             f'{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_db}',
         ))
 
