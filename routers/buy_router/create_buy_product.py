@@ -1,23 +1,23 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from exceptions.BadRequest import BadRequest
 from models.BillingAccountModel import BillingAccountModel
 from models.ProductModel import ProductModel
 from permissions.IsAuthenticated import IsAuthenticated
-from schemas.BuySchema import BuyProductSchema
+from schemas.BuySchema import BuyProductSchema, BuyStatus
 from services.async_database import get_db
 
 router = APIRouter()
 
 
-@router.post('/')
+@router.post('/', status_code=status.HTTP_201_CREATED)
 @IsAuthenticated
 async def create_buy_product(
         request: Request,
         data: BuyProductSchema,
         db: AsyncSession = Depends(get_db),
-):
+) -> BuyStatus:
     auth_user = request.jwt_user
 
     product = await ProductModel.get_by_id(data.product, db)
@@ -48,6 +48,6 @@ async def create_buy_product(
         'db': db,
     })
 
-    return {
+    return BuyStatus(**{
         'status': operation_status,
-    }
+    })

@@ -19,3 +19,11 @@ class UserSchemaOut(BaseModel):
 
 class UserSchemaStatus(BaseModel):
     is_active: bool
+
+
+class UserActivated(BaseModel):
+    detail: str
+
+
+class UserRegistered(BaseModel):
+    activate_url: str

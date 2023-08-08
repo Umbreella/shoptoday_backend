@@ -127,7 +127,7 @@ async def test_When_PostForBuyProductWithOutFunds_Should_DataWith200(
         },
     })
 
-    expected_status = status.HTTP_200_OK
+    expected_status = status.HTTP_201_CREATED
     real_status = response.status_code
 
     expected_data = {
@@ -150,7 +150,7 @@ async def test_When_PostForBuyProductWithFunds_Should_DataWith200(
         },
     })
 
-    expected_status = status.HTTP_200_OK
+    expected_status = status.HTTP_201_CREATED
     real_status = response.status_code
 
     expected_data = {
